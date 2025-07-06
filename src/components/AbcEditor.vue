@@ -1,8 +1,8 @@
 <template>
 	<div>
-<!--		<CodeInput id="abc" name="abc">{{abcString}}</CodeInput>-->
-		<textarea id="abc" v-model="abcString" @change="refreshHighlight" @input="refreshHighlight"></textarea>
-		<pre><code id="highlight-container" v-html="formattedAbc"></code></pre>
+		<code-input id="abc" name="abc">{{abcString}}</code-input>
+<!--		<textarea id="abc" v-model="abcString" @change="refreshHighlight" @input="refreshHighlight"></textarea>-->
+<!--		<pre><code id="highlight-container" v-html="formattedAbc"></code></pre>-->
 		<div id="paper"></div>
 		<div id="warnings"></div>
 	</div>
@@ -11,7 +11,7 @@
 <script lang="ts" setup>
 import {onMounted, ref} from "vue";
 import abcjs from "abcjs";
-import highlight from "highlight.js"
+import highlight from "highlight.js/lib/core"
 import highlightAbc from "highlightjs-abc"
 //import {CodeInput, templates, registerTemplate} from "@webcoder49/code-input/code-input";
 //import "@webcoder49/code-input/code-input"
@@ -49,31 +49,37 @@ w:Strang- ers
 T:Inserted subtitle
 [V: PianoLeftHand] B,6 .D2 !arpeggio![F,8F8A,8]|(B,2 B,,2 C,12)|"^annotation"F,16|[F,16D,16]|Z2|]`)
 
-const formattedAbc = ref('')
+//const formattedAbc = ref('')
 
 onMounted(() => {
 	highlight.registerLanguage("abc", highlightAbc);
-	//codeInput.registerTemplate("syntax-highlighted", codeInput.templates.hljs(highlight, []));
-	//const el = document.querySelector('#abc textarea')
-	const el = document.querySelector('#abc')
-	const editArea = new abcjs.EditArea(el)
-	new abcjs.Editor(editArea, {
-		canvas_id: "paper",
-		warnings_id: "warnings",
-		abcjsParams: {}
-	});
-	refreshHighlight()
+	codeInput.registerTemplate("syntax-highlighted", codeInput.templates.hljs(highlight, []));
+	setTimeout(() => {
+		const el = document.querySelector('#abc textarea')
+		//const el = document.querySelector('#abc')
+		const editArea = new abcjs.EditArea(el)
+		new abcjs.Editor(editArea, {
+			canvas_id: "paper",
+			warnings_id: "warnings",
+			abcjsParams: {}
+		});
+		// refreshHighlight()
+	}, 1000)
 })
 
-function refreshHighlight() {
-	formattedAbc.value = highlight.highlight(abcString.value, { language: "abc" }).value;
-}
+// function refreshHighlight() {
+// 	formattedAbc.value = highlight.highlight(abcString.value, { language: "abc" }).value;
+// }
 </script>
 
 <style>
 @import '@webcoder49/code-input/code-input.css';
 body {
 	font-size: 18px;
+}
+
+code-input {
+	resize: both;
 }
 
 pre {
