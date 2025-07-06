@@ -1,19 +1,21 @@
 <template>
 	<div>
 <!--		<CodeInput id="abc" name="abc">{{abcString}}</CodeInput>-->
-		<textarea id="abc" v-model="abcString"></textarea>
+		<textarea id="abc" v-model="abcString" @change="refreshHighlight" @input="refreshHighlight"></textarea>
+		<pre><code id="highlight-container" v-html="formattedAbc"></code></pre>
 		<div id="paper"></div>
 		<div id="warnings"></div>
 	</div>
 </template>
 
 <script lang="ts" setup>
-import {onMounted} from "vue";
+import {onMounted, ref} from "vue";
 import abcjs from "abcjs";
-//import hljs from "highlight.js"
+import highlight from "highlight.js"
 //import {CodeInput, templates, registerTemplate} from "@webcoder49/code-input/code-input";
+import highlightAbc from "highlightjs-abc"
 
-const abcString = `X:1
+const abcString = ref(`X:1
 M:4/4
 L:1/16
 %%titlefont Times 22.0
@@ -44,11 +46,14 @@ P:A
 w:Strang- ers
 [V: extra] B,16 | "Bb"{C}B,4 ({^CD}B,4 =B,8) |
 T:Inserted subtitle
-[V: PianoLeftHand] B,6 .D2 !arpeggio![F,8F8A,8]|(B,2 B,,2 C,12)|"^annotation"F,16|[F,16D,16]|Z2|]`
+[V: PianoLeftHand] B,6 .D2 !arpeggio![F,8F8A,8]|(B,2 B,,2 C,12)|"^annotation"F,16|[F,16D,16]|Z2|]`)
+
+const formattedAbc = ref('')
 
 onMounted(() => {
-	//registerTemplate("syntax-highlighted", templates.hljs(hljs, []));
+	//registerTemplate("syntax-highlighted", templates.hljs(highlight, []));
 	// const el = document.querySelector('#abc textarea')
+	highlight.registerLanguage("abc", highlightAbc);
 	const el = document.querySelector('#abc')
 	const editArea = new abcjs.EditArea(el)
 	new abcjs.Editor(editArea, {
@@ -56,10 +61,35 @@ onMounted(() => {
 		warnings_id: "warnings",
 		abcjsParams: {}
 	});
-
+	refreshHighlight()
 })
+
+function refreshHighlight() {
+	formattedAbc.value = highlight.highlight(abcString.value, { language: "abc" }).value;
+}
 </script>
 
 <style>
 @import '@webcoder49/code-input/code-input.css';
+body {
+	font-size: 18px;
+}
+
+pre {
+	background: aliceblue;
+	padding: 5px;
+}
+.hljs-keyword {
+	color: blue;
+}
+.hljs-string {
+	color: green;
+}
+.hljs-punctuation {
+	font-weight: bold;
+}
+.hljs-operator {
+	background: #dddddd;
+}
+
 </style>

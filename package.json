@@ -15,6 +15,7 @@
 		"@webcoder49/code-input": "2.2.1",
 		"abcjs": "6.5.1",
 		"highlight.js": "11.11.1",
+		"highlightjs-abc": "1.0.0",
 		"vue": "^3.5.17"
 	},
 	"devDependencies": {
