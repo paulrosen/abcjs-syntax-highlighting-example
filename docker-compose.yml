@@ -1,0 +1,8 @@
+services:
+  app:
+    image: abcjs-syntax
+    build: .
+    container_name: abcjs-syntax
+    volumes:
+      - .:/srv/app
+      - ./node_modules:/srv/app/node_modules
