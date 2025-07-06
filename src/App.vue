@@ -1,10 +1,11 @@
 <template>
 	<div id="app">
-		New App
+		<AbcEditor />
 	</div>
 </template>
 
 <script setup lang="ts">
+import AbcEditor from "@/components/AbcEditor.vue";
 </script>
 
 <style>

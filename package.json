@@ -12,6 +12,7 @@
 		"lint": "eslint . --fix"
 	},
 	"dependencies": {
+		"abcjs": "6.5.1",
 		"vue": "^3.5.17"
 	},
 	"devDependencies": {
