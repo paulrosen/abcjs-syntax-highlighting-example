@@ -9,9 +9,10 @@
 </template>
 
 <script lang="ts" setup>
-import {nextTick, onMounted, ref} from "vue";
+import {onMounted, ref} from "vue";
 import abcjs from "abcjs";
 import highlight from "highlight.js/lib/core"
+//@ts-expect-error : no typescript defs found
 import highlightAbc from "highlightjs-abc"
 //import {CodeInput, templates, registerTemplate} from "@webcoder49/code-input/code-input";
 //import "@webcoder49/code-input/code-input"
@@ -53,10 +54,15 @@ T:Inserted subtitle
 
 onMounted(async () => {
 	highlight.registerLanguage("abc", highlightAbc);
-	codeInput.registerTemplate("syntax-highlighted", codeInput.templates.hljs(highlight, []));
+	//@ts-expect-error - codeInput is declared in window
+	window.codeInput.registerTemplate("syntax-highlighted", window.codeInput.templates.hljs(highlight, []));
 
 	setTimeout(() => {
 		const el = document.querySelector('#abc textarea')
+		if (!el) {
+			console.log("Error! Can't find the editor on the page")
+			return
+		}
 		//const el = document.querySelector('#abc')
 		const editArea = new abcjs.EditArea(el)
 		// TODO-PER: Change this to `new abcjs.Editor('#abc textarea', {` after release
@@ -66,7 +72,7 @@ onMounted(async () => {
 			abcjsParams: {}
 		});
 		// refreshHighlight()
-	}, 10)
+	}, 100)
 })
 
 // function refreshHighlight() {
