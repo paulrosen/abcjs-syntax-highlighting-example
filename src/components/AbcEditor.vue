@@ -12,8 +12,9 @@
 import {onMounted, ref} from "vue";
 import abcjs from "abcjs";
 import highlight from "highlight.js"
-//import {CodeInput, templates, registerTemplate} from "@webcoder49/code-input/code-input";
 import highlightAbc from "highlightjs-abc"
+//import {CodeInput, templates, registerTemplate} from "@webcoder49/code-input/code-input";
+//import "@webcoder49/code-input/code-input"
 
 const abcString = ref(`X:1
 M:4/4
@@ -51,9 +52,9 @@ T:Inserted subtitle
 const formattedAbc = ref('')
 
 onMounted(() => {
-	//registerTemplate("syntax-highlighted", templates.hljs(highlight, []));
-	// const el = document.querySelector('#abc textarea')
 	highlight.registerLanguage("abc", highlightAbc);
+	//codeInput.registerTemplate("syntax-highlighted", codeInput.templates.hljs(highlight, []));
+	//const el = document.querySelector('#abc textarea')
 	const el = document.querySelector('#abc')
 	const editArea = new abcjs.EditArea(el)
 	new abcjs.Editor(editArea, {
