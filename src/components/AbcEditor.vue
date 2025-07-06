@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts" setup>
-import {onMounted, ref} from "vue";
+import {nextTick, onMounted, ref} from "vue";
 import abcjs from "abcjs";
 import highlight from "highlight.js/lib/core"
 import highlightAbc from "highlightjs-abc"
@@ -51,20 +51,22 @@ T:Inserted subtitle
 
 //const formattedAbc = ref('')
 
-onMounted(() => {
+onMounted(async () => {
 	highlight.registerLanguage("abc", highlightAbc);
 	codeInput.registerTemplate("syntax-highlighted", codeInput.templates.hljs(highlight, []));
+
 	setTimeout(() => {
 		const el = document.querySelector('#abc textarea')
 		//const el = document.querySelector('#abc')
 		const editArea = new abcjs.EditArea(el)
+		// TODO-PER: Change this to `new abcjs.Editor('#abc textarea', {` after release
 		new abcjs.Editor(editArea, {
 			canvas_id: "paper",
 			warnings_id: "warnings",
 			abcjsParams: {}
 		});
 		// refreshHighlight()
-	}, 1000)
+	}, 10)
 })
 
 // function refreshHighlight() {
@@ -80,6 +82,11 @@ body {
 
 code-input {
 	resize: both;
+}
+
+textarea::selection {
+	background: red;
+	color: #ffffff;
 }
 
 pre {
