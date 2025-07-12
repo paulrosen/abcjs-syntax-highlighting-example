@@ -1,8 +1,6 @@
 <template>
 	<div>
 		<code-input id="abc" name="abc">{{abcString}}</code-input>
-<!--		<textarea id="abc" v-model="abcString" @change="refreshHighlight" @input="refreshHighlight"></textarea>-->
-<!--		<pre><code id="highlight-container" v-html="formattedAbc"></code></pre>-->
 		<div id="paper"></div>
 		<div id="warnings"></div>
 	</div>
@@ -14,8 +12,8 @@ import abcjs from "abcjs";
 import highlight from "highlight.js/lib/core"
 //@ts-expect-error : no typescript defs found
 import highlightAbc from "highlightjs-abc"
-//import {CodeInput, templates, registerTemplate} from "@webcoder49/code-input/code-input";
-//import "@webcoder49/code-input/code-input"
+import { registerTemplate } from "@webcoder49/code-input";
+import CiHljsTemplate from "@webcoder49/code-input/templates/hljs.mjs";
 
 const abcString = ref(`X:1
 M:4/4
@@ -50,20 +48,15 @@ w:Strang- ers
 T:Inserted subtitle
 [V: PianoLeftHand] B,6 .D2 !arpeggio![F,8F8A,8]|(B,2 B,,2 C,12)|"^annotation"F,16|[F,16D,16]|Z2|]`)
 
-//const formattedAbc = ref('')
-
 onMounted(async () => {
 	highlight.registerLanguage("abc", highlightAbc);
-	//@ts-expect-error - codeInput is declared in window
-	window.codeInput.registerTemplate("syntax-highlighted", window.codeInput.templates.hljs(highlight, []));
-
+	registerTemplate("syntax-highlighted", new CiHljsTemplate(highlight, []));
 	setTimeout(() => {
 		const el = document.querySelector('#abc textarea')
 		if (!el) {
 			console.log("Error! Can't find the editor on the page")
 			return
 		}
-		//const el = document.querySelector('#abc')
 		const editArea = new abcjs.EditArea(el)
 		// TODO-PER: Change this to `new abcjs.Editor('#abc textarea', {` after release
 		new abcjs.Editor(editArea, {
@@ -71,16 +64,13 @@ onMounted(async () => {
 			warnings_id: "warnings",
 			abcjsParams: {}
 		});
-		// refreshHighlight()
 	}, 100)
 })
 
-// function refreshHighlight() {
-// 	formattedAbc.value = highlight.highlight(abcString.value, { language: "abc" }).value;
-// }
 </script>
 
 <style>
+@import 'abcjs/abcjs-audio.css';
 @import '@webcoder49/code-input/code-input.css';
 body {
 	font-size: 18px;
@@ -95,12 +85,21 @@ textarea::selection {
 	color: #ffffff;
 }
 
-pre {
+code {
 	background: aliceblue;
 	padding: 5px;
 }
-.hljs-keyword {
+.hljs-keyword, .hljs-meta {
 	color: blue;
+}
+.hljs-title {
+	font-weight: bold;
+}
+.hljs-meta.string {
+	color: rgba(0, 0, 0, 0.80);
+}
+.hljs-number {
+	font-style: italic;
 }
 .hljs-string {
 	color: green;

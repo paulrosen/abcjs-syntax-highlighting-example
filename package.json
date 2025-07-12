@@ -12,10 +12,10 @@
 		"lint": "eslint . --fix"
 	},
 	"dependencies": {
-		"@webcoder49/code-input": "2.5.0",
+		"@webcoder49/code-input": "https://github.com/WebCoder49/code-input#0948e6d90edd370e92765cd7cc7fc7a10c3daa1d",
 		"abcjs": "https://github.com/paulrosen/abcjs.git#804c4dfaef5ba816d68777faebca41cac14c3208",
 		"highlight.js": "11.11.1",
-		"highlightjs-abc": "1.0.0",
+		"highlightjs-abc": "1.1.0",
 		"vue": "^3.5.17"
 	},
 	"devDependencies": {
