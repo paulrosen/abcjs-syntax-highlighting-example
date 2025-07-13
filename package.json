@@ -12,7 +12,7 @@
 		"lint": "eslint . --fix"
 	},
 	"dependencies": {
-		"@webcoder49/code-input": "https://github.com/WebCoder49/code-input#esm-support",
+		"@webcoder49/code-input": "https://github.com/WebCoder49/code-input#883d7e050f108faa24e8cb2b0ca22a24d235ce96",
 		"abcjs": "https://github.com/paulrosen/abcjs.git#804c4dfaef5ba816d68777faebca41cac14c3208",
 		"highlight.js": "11.11.1",
 		"highlightjs-abc": "1.1.0",
