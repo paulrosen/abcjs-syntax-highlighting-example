@@ -26,21 +26,20 @@ const parsedCode = ref('')
 onMounted(async () => {
 	highlight.registerLanguage("abc", highlightAbcParser);
 	codeInput.registerTemplate("syntax-highlighted", new CiHljsTemplate(highlight, []));
-	setTimeout(() => {
-		const el = document.querySelector('#abc textarea')
-		if (!el) {
-			console.log("Error! Can't find the editor on the page")
-			return
-		}
-		const editArea = new abcjs.EditArea(el)
-		// TODO-PER: Change this to `new abcjs.Editor('#abc textarea', {` after release
-		new abcjs.Editor(editArea, {
-			canvas_id: "paper",
-			warnings_id: "warnings",
-			abcjsParams: {}
-		});
-		dumpStyles()
-	}, 100)
+
+	const el = document.querySelector('#abc textarea')
+	if (!el) {
+		console.log("Error! Can't find the editor on the page")
+		return
+	}
+	const editArea = new abcjs.EditArea(el)
+	// TODO-PER: Change this to `new abcjs.Editor('#abc textarea', {` after release
+	new abcjs.Editor(editArea, {
+		canvas_id: "paper",
+		warnings_id: "warnings",
+		abcjsParams: {}
+	});
+	dumpStyles()
 })
 
 
