@@ -1,0 +1,57 @@
+/* Paul Theme
+	A theme for syntax highlighting of ABC code
+	for the abcjs-editor.
+
+	This meant to be used with @webcoder49/code-input and
+	highlightjs-abc projects.
+ */
+code-input {
+	resize: both;
+	border: 1px solid #bbbbbb;
+}
+
+#abc textarea::selection {
+	background: red;
+	color: #ffffff;
+}
+
+#abc code {
+	/*background: aliceblue;*/
+	padding: 5px;
+}
+
+.hljs-keyword, .hljs-meta {
+	color: blue;
+}
+.hljs-title {
+	font-weight: bold;
+}
+.hljs-meta.string {
+	color: rgba(0, 0, 0, 0.80);
+}
+.hljs-number {
+	font-style: italic;
+}
+.hljs-note {
+	border-bottom: 1px solid blue;
+	border-radius: 6px;
+}
+.hljs-string {
+	color: green;
+}
+.hljs-decoration {
+	color: #0f7d8c;
+}
+.hljs-punctuation {
+	font-weight: bold;
+}
+.hljs-operator {
+	background: #dddddd;
+}
+.hljs-error {
+	background: red;
+}
+.htjs-comment {
+	font-style: italic;
+	color: #bbb;
+}

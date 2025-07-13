@@ -1,8 +1,13 @@
 <template>
 	<div>
-		<code-input id="abc" name="abc">{{abcString}}</code-input>
-		<div id="paper"></div>
-		<div id="warnings"></div>
+		<code-input id="abc" name="abc" @change="onChange">{{abcString}}</code-input>
+		<div class="output">
+			<pre class="elements">{{parsedCode}}</pre>
+			<div>
+				<div id="paper"></div>
+				<div id="warnings"></div>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -10,8 +15,8 @@
 import {onMounted, ref} from "vue";
 import abcjs from "abcjs";
 import highlight from "highlight.js/lib/core"
-//@ts-expect-error : no typescript defs found
-import highlightAbc from "highlightjs-abc"
+//import highlightAbc from "highlightjs-abc"
+import highlightAbcParser from "@/highlight-abc-parser"
 import { registerTemplate } from "@webcoder49/code-input";
 import CiHljsTemplate from "@webcoder49/code-input/templates/hljs.mjs";
 
@@ -38,18 +43,21 @@ P: AABB
 %%staves {(PianoRightHand extra) (PianoLeftHand)}
 V:PianoRightHand clef=treble+8 name=RH
 V:PianoLeftHand clef=bass name=LH
-K:Bb
+K:Bb%comment
 P:A
 %%text there is some random text
 %%sep 0.4cm 0.4cm 6cm
 [V: PianoRightHand] !mp![b8B8d8] f3g !//!f4|!<(![d12b12] !<)![b4g4]|z4  b^f_df (3B2d2c2 B4|1[Q:"left" 1/4=170"right"]!f![c4f4] z4 [b8d8]| (3[G8e8] Tu[c8f8] G8|]
 w:Strang- ers
+% second line
 [V: extra] B,16 | "Bb"{C}B,4 ({^CD}B,4 =B,8) |
 T:Inserted subtitle
 [V: PianoLeftHand] B,6 .D2 !arpeggio![F,8F8A,8]|(B,2 B,,2 C,12)|"^annotation"F,16|[F,16D,16]|Z2|]`)
 
+const parsedCode = ref('')
+
 onMounted(async () => {
-	highlight.registerLanguage("abc", highlightAbc);
+	highlight.registerLanguage("abc", highlightAbcParser);
 	registerTemplate("syntax-highlighted", new CiHljsTemplate(highlight, []));
 	setTimeout(() => {
 		const el = document.querySelector('#abc textarea')
@@ -64,51 +72,45 @@ onMounted(async () => {
 			warnings_id: "warnings",
 			abcjsParams: {}
 		});
+		dumpStyles()
 	}, 100)
 })
 
+
+function onChange() {
+	dumpStyles()
+}
+function dumpStyles() {
+	const el = document.querySelector("#abc code")
+	if (el) {
+		let text = el.innerHTML
+		text = text.replace(/<\/span>/g,"</span>\n")
+		text = text.replace(/<span/g,"\n<span")
+		text = text.replace(/\n+/g, "\n")
+		parsedCode.value = text
+	}
+}
 </script>
 
 <style>
-@import 'abcjs/abcjs-audio.css';
 @import '@webcoder49/code-input/code-input.css';
+@import '@/assets/css/paul-theme.css';
+
 body {
 	font-size: 18px;
 }
 
 code-input {
-	resize: both;
+	height: 400px;
 }
 
-textarea::selection {
-	background: red;
-	color: #ffffff;
+.output {
+	display: flex;
 }
-
-code {
-	background: aliceblue;
-	padding: 5px;
-}
-.hljs-keyword, .hljs-meta {
-	color: blue;
-}
-.hljs-title {
-	font-weight: bold;
-}
-.hljs-meta.string {
-	color: rgba(0, 0, 0, 0.80);
-}
-.hljs-number {
-	font-style: italic;
-}
-.hljs-string {
-	color: green;
-}
-.hljs-punctuation {
-	font-weight: bold;
-}
-.hljs-operator {
-	background: #dddddd;
+.elements {
+	max-width: 800px;
+	max-height: 900px;
+	overflow: auto;
 }
 
 </style>
