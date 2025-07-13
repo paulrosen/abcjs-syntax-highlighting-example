@@ -21,7 +21,7 @@ code-input {
 }
 
 .hljs-keyword, .hljs-meta {
-	color: blue;
+	color: #0B34A8;
 }
 .hljs-title {
 	font-weight: bold;
@@ -37,7 +37,7 @@ code-input {
 	border-radius: 6px;
 }
 .hljs-string {
-	color: green;
+	color: #107121;
 }
 .hljs-decoration {
 	color: #0f7d8c;
@@ -46,12 +46,12 @@ code-input {
 	font-weight: bold;
 }
 .hljs-operator {
-	background: #dddddd;
+	background: #FCF2D0;
 }
 .hljs-error {
 	background: red;
 }
-.htjs-comment {
+.hljs-comment {
 	font-style: italic;
-	color: #bbb;
+	color: #818181;
 }
