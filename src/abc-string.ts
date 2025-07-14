@@ -30,4 +30,9 @@ w:Strang- ers % comment on lyric line
 % second line
 [V: extra] B,16 | "Bb"{C}B,4 ({^CD}B,4 =B,8) | % comment on music line
 T:Inserted subtitle
-[V: PianoLeftHand] B,6 .D2 !arpeggio![F,8F8A,8]|(B,2 B,,2 C,12)|"^annotation"F,16 & B B, B' B,2 _b' ^^B=B,|[F,16D,16]|Z2|]`
+[V: PianoLeftHand] B,6 .D2 !arpeggio![F,8F8A,8]|(B,2 B,,2 C,12)|"^annotation"F,16 & B TB, B' B,2 _b' ^^B=B,|[F,16D,16]|Z2|]
+V:PianoRightHand
+cdef|
+V:PianoLeftHand
+CDEF|
+`

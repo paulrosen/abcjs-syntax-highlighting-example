@@ -8,98 +8,218 @@
 import type {HLJSApi} from "highlight.js";
 
 export default function(hljs : HLJSApi) {
-	const accidentalDirectivePrefix = `(?<=%%(propagate|writeout)-accidentals.*)`;
-	const fontDirectivePrefix = `(?<=%%(title|subtitle|composer|parts|tempo|gchord|annotation|info|text|vocal|words|set)font.*)`;
-	const textDirectivePrefix = `(?<=%%(text|center)\\s)`;
+	const untilCommentOrEndOfLine = /(?=[%\n])/
+
+	const inlineHeader = {
+		scope: "inline-header",
+		begin: /\[[MLQPRIV]:/,
+		end: /]/,
+		contains: [
+			{
+				scope: "header-content",
+				match: /[^\]]*/,
+				endsWithParent: true
+			}
+		]
+	}
+
+	const note = {
+		scope: "note",
+		match: /[_^]?[_^=]?[A-Ga-gZz][,']*\d*\/*\d*-?/
+	}
+
+	const barLine = {
+		scope: "bar",
+		match: /(\|\]|\|\||\[\||\|:|:\||::|\|)\d*([,\-]\d)*/,
+	}
+
+	const tuple = {
+		scope: "tuple",
+		match: /\([2-9](:[1-9])?(:[1-9])?/
+	}
+
+	const graceNotes = {
+		scope: "grace",
+		begin: /\{/, end: /\}/,
+		contains: [
+			{
+				scope: "note",
+				match: /[_^]?[_^=]?[A-Ga-gZz][,']*\d*\/*\d*-?/
+			},
+		],
+	}
+
+	const chord = {
+		scope: "chord",	// That is: [Ace]
+		begin: /\[/, end: /\]\d*\/*\d*/,
+		contains: [
+			{
+				scope: "note",
+				match: /[_^]?[_^=]?[A-Ga-gZz][,']*\d*-?/
+			},
+		],
+	}
+
+	const chordSymbol = {
+		scope: "chord-symbol", // That is: "Am"
+		begin: '"', end: '"'
+	}
+
+	const decoration = {
+		scope: "decoration",
+		begin: "!", end: "!"
+	}
+	const decorationShortcut = {
+		scope: "decoration",
+			match: /[\.\~HLMOPSTuv]/
+	}
+	const overlay =	{
+		scope: "overlay",
+		match: /&/
+	}
+
+	const comment =	hljs.COMMENT("%", "$")
+
+	const space = {
+		scope: "space",
+		match: / /
+	}
+	const error = {
+		scope: "error",
+		match: /./
+	}
 
 	return {
 		name: "Abc Notation",
 		aliases: ["abc"],
 		contains: [
-			// fields
+			//
+			// header lines and directives (that is, everything except music lines
+			//
 			{
-				scope: "meta",
-				match: /^[XTCOAMLQPZNGHKRBDFSImrsUVWw+]:/
+				scope: "header",
+				match: /^[XTCOAMLQPZNGHKRBDFSImrsUVW+]:/
 			},
-			// text content in fields
-			{
-				scope: "meta string",
-				match: /(?<=[COAZHBDFS]:).*/
-			},
-			// title content
+			// content of header lines
 			{
 				scope: "title",
-				match: /(?<=[T]:).*/
-			},
-			// title content, lyrics content
-			{
-				scope: "lyrics",
-				match: /(?<=[Ww]:).*/
-			},
-			// notes
-			{
-				scope: "note",
-				match: /[_^=]?[A-Ga-g][,']?\d+/
-			},
-			// duplets, triplets, quadruplets, etc.
-			{
-				scope: "operator",
-				match: /\([2-9]/
-			},
-			// chord symbols
-			hljs.QUOTE_STRING_MODE,
-			// numbers
-			hljs.NUMBER_MODE,
-			// decorations
-			{
-				scope: "decoration",
-				begin: "!", end: "!"
-			},
-			// repeat symbols, bar symbols
-			{
-				scope: "operator",
-				match: /(\|\||::|\[?:*\|(:|\[?[1-9])*\]?)/
+				match: /(?<=\nT:)[^%\n]*/
 			},
 			{
-				scope: "operator",
-				match: /\[".+?"/
+				scope: "part",
+				match: /(?<=\nP:)[^%\n]*/
 			},
-			// ties, slurs, grace notes, chords, unisons
 			{
-				scope: "operator",
-				match: /(?<!(\w:|%%).*)(-|\(|\)|{|}|\[|\])/
+				scope: "tempo",
+				match: /(?<=\nQ:)[^%\n]*/
 			},
-			// macro expressions
 			{
-				scope: "operator",
-				match: "="
+				scope: "key",
+				match: /(?<=\nK:)[^%\n]*/
+			},
+			{
+				scope: "meter",
+				match: /(?<=\nM:)[^%\n]*/
+			},
+			{
+				scope: "voice",
+				match: /(?<=\nV:)[^%\n]*/
+			},
+			{
+				scope: "history",
+				match: /(?<=\nH:)[^%\n]*/
+			},
+			{
+				scope: "notes",
+				match: /(?<=\nN:)[^%\n]*/
+			},
+			{
+				scope: "words",
+				match: /(?<=\nW:)[^%\n]*/
+			},
+			// Everything not enumerated above - don't need separate styles for these.
+			{
+				scope: "header-content",
+				match: /(?<=[XCOALZGRBDFSImrsU]:)[^%\n]*/
 			},
 			// directives
 			{
-				scope: "keyword",
+				// For staves, we want to style the staff information uniquely
+				scope: "staves",
+				begin: /^%%staves/,
+				end: untilCommentOrEndOfLine,
+				contains: [
+					{
+						scope: "staves-content",
+						match: /[^%\n]*/,
+						endsWithParent: true
+					}
+				]
+			},
+			{
+				scope: "directive",
 				match: /^%%\S+/
 			},
-			// accidental directives
 			{
-				scope: "keyword",
-				match: new RegExp(accidentalDirectivePrefix +"(not|octave|pitch|none|added|all)")
+				// All other directives just get a simple style
+				scope: "directive-body",
+				match: /(?<=%%\S+).*/
 			},
-			// font directives
+			// lyrics content
 			{
-				scope: "literal",
-				match: new RegExp(fontDirectivePrefix +"\\*")
+				scope: "lyrics",
+				begin: /^w:/,
+				end: untilCommentOrEndOfLine,
+				contains: [
+					{
+						scope: "lyrics-content",
+						match: /[^%\n]*/,
+						endsWithParent: true
+					}
+				]
 			},
-			// text directives
+
+			//
+			// Music lines
+			//
+
+			inlineHeader,
+			note,
+			barLine,
+			tuple,
+			graceNotes,
+			chord,
+			chordSymbol,
+			decoration,
+			decorationShortcut,
+			overlay,
+			comment,
+			space,
+
+			// slur
 			{
-				scope: "chord",
-				match: new RegExp(textDirectivePrefix +".*")
+				scope: "slur",
+				begin: /\(/, end: /\)/,
+				contains: [
+				 	inlineHeader,
+				 	note,
+				 	barLine,
+				 	tuple,
+				 	graceNotes,
+				 	chord,
+				 	chordSymbol,
+				 	decoration,
+				 	decorationShortcut,
+				 	overlay,
+				 	comment,
+				 	space,
+					{
+						scope: "error",
+						match: /[^)]/
+					}
+				]
 			},
-			// comments
-			hljs.COMMENT("%", "$"),
-			// {
-			//   scope: "error",
-			//   match: new RegExp(/.+/)
-			// }
+			error,
 		]
 	};
 }

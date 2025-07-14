@@ -11,7 +11,7 @@ code-input {
 }
 
 #abc textarea::selection {
-	background: red;
+	background: #6781ef;
 	color: #ffffff;
 }
 
@@ -20,38 +20,60 @@ code-input {
 	padding: 5px;
 }
 
-.hljs-keyword, .hljs-meta {
+/* Header lines */
+.hljs-header {
 	color: #0B34A8;
+}
+.hljs-header-content {
+	font-weight: bold;
 }
 .hljs-title {
 	font-weight: bold;
 }
-.hljs-meta.string {
-	color: rgba(0, 0, 0, 0.80);
+.hljs-staves {
+	background-color: #ffdfe5;
 }
-.hljs-number {
-	font-style: italic;
+.hljs-staves-content {
+	font-weight: bold;
+}
+.hljs-key {
+	font-weight: bold;
+}
+
+/* Music lines */
+.hljs-inline-header {
+	background-color: #ffdfe5;
 }
 .hljs-note {
 	border-bottom: 1px solid blue;
 	border-radius: 6px;
 }
-.hljs-string {
+.hljs-chord-symbol {
 	color: #107121;
 }
 .hljs-decoration {
 	color: #0f7d8c;
 }
-.hljs-punctuation {
-	font-weight: bold;
+.hljs-grace {
+	background: #F2F2F2;
 }
-.hljs-operator {
+.hljs-chord {
 	background: #FCF2D0;
 }
+.hljs-bar {
+	background: #71f6ff;
+}
+.hljs-overlay {
+	background: #71f6ff;
+}
 .hljs-error {
+	color: #ffffff;
 	background: red;
 }
 .hljs-comment {
 	font-style: italic;
 	color: #818181;
+}
+.hljs-slur {
+	border-bottom: 2px dotted #aaa;
 }
