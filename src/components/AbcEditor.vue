@@ -15,8 +15,8 @@
 import {onMounted, ref} from "vue";
 import abcjs from "abcjs";
 import highlight from "highlight.js/lib/core"
-//import highlightAbc from "highlightjs-abc"
-import highlightAbcParser from "@/highlight-abc-parser"
+import highlightAbc from "highlightjs-abc"
+//import highlightAbcParser from "@/highlight-abc-parser"
 import codeInput from "@webcoder49/code-input";
 import CiHljsTemplate from "@webcoder49/code-input/templates/hljs.mjs";
 import {abcString} from "@/abc-string.ts";
@@ -24,7 +24,8 @@ import {abcString} from "@/abc-string.ts";
 const parsedCode = ref('')
 
 onMounted(async () => {
-	highlight.registerLanguage("abc", highlightAbcParser);
+	highlight.registerLanguage("abc", highlightAbc);
+	//highlight.registerLanguage("abc", highlightAbcParser);
 	codeInput.registerTemplate("syntax-highlighted", new CiHljsTemplate(highlight, []));
 
 	const el = document.querySelector('#abc textarea')
